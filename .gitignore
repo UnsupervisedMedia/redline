@@ -1,0 +1,7 @@
+/target
+*.log
+.env
+.claude/
+.mcp.json
+.superpowers/
+.worktrees/

@@ -1,0 +1,38 @@
+[graph]
+all-features = false
+
+[advisories]
+version = 2
+ignore = [
+  # quick-xml: reachable only via egui's accesskit/zbus (D-Bus introspection XML from the
+  # local session bus) and wayland-scanner (build-time proc macro). Neither parses user files.
+  { id = "RUSTSEC-2026-0194", reason = "quick-xml via zbus_xml / wayland-scanner only; no untrusted XML" },
+  { id = "RUSTSEC-2026-0195", reason = "quick-xml via zbus_xml / wayland-scanner only; no untrusted XML" },
+  # Unmaintained transitive crates pulled in by eframe/egui 0.29 or by optional features.
+  # Tracked for removal when egui is upgraded.
+  { id = "RUSTSEC-2025-0056", reason = "adler: transitive (image/png stack), no replacement path in our control" },
+  { id = "RUSTSEC-2021-0139", reason = "ansi_term: transitive via optional/dev dependency" },
+  { id = "RUSTSEC-2024-0375", reason = "atty: transitive" },
+  { id = "RUSTSEC-2025-0141", reason = "bincode 1.x: used for local canvas-sort store only; migrate to postcard/bincode 2 later" },
+  { id = "RUSTSEC-2024-0436", reason = "paste: proc-macro, build-time only" },
+  { id = "RUSTSEC-2026-0206", reason = "rustybuzz: transitive via egui text stack" },
+  { id = "RUSTSEC-2026-0192", reason = "ttf-parser: transitive via egui/resvg font stack" },
+  { id = "RUSTSEC-2026-0371", reason = "zbus_names: transitive via accesskit (Linux a11y)" },
+  { id = "RUSTSEC-2026-0370", reason = "zvariant: transitive via accesskit (Linux a11y)" },
+  { id = "RUSTSEC-2026-0372", reason = "zvariant_derive: transitive via accesskit (Linux a11y)" },
+]
+
+[licenses]
+version = 2
+allow = [
+  "Apache-2.0", "Apache-2.0 WITH LLVM-exception", "MIT", "MIT-0", "BSD-2-Clause", "BSD-3-Clause",
+  "ISC", "Zlib", "0BSD", "Unlicense", "CC0-1.0", "BSL-1.0", "MPL-2.0", "Unicode-3.0",
+  "Unicode-DFS-2016", "OFL-1.1", "NCSA", "LGPL-2.1-or-later", "LicenseRef-UFL-1.0", "CDLA-Permissive-2.0",
+]
+
+[bans]
+multiple-versions = "allow"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

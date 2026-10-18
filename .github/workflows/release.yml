@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  target: x86_64-unknown-linux-gnu,  archive: tar.gz }
+          - { os: macos-latest,   target: aarch64-apple-darwin,      archive: tar.gz }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc,    archive: zip }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Install system libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev libgl1-mesa-dev libx11-dev libxcursor-dev libxi-dev libxrandr-dev libssl-dev pkg-config
+      - name: Tag must match Cargo.toml version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          ver=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          [ "${{ github.ref_name }}" = "v$ver" ] || { echo "tag ${{ github.ref_name }} != v$ver"; exit 1; }
+      - run: cargo build --locked --release
+      - name: Package
+        shell: bash
+        run: |
+          set -euo pipefail
+          name="redline-${{ github.ref_name }}-${{ matrix.target }}"
+          mkdir "$name"
+          if [ "${{ runner.os }}" = Windows ]; then cp target/release/redline.exe "$name/"; else cp target/release/redline "$name/"; fi
+          cp LICENSE NOTICE README.md THIRD_PARTY_LICENSES.md "$name/"
+          if [ "${{ matrix.archive }}" = zip ]; then 7z a "$name.zip" "$name" >/dev/null; else tar czf "$name.tar.gz" "$name"; fi
+          ls -l "$name".*
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist-${{ matrix.target }}
+          path: redline-*.*
+          if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum redline-* > SHA256SUMS
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/* --repo "${{ github.repository }}" --title "${{ github.ref_name }}" --generate-notes --draft

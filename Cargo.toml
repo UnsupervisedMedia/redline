@@ -1,0 +1,95 @@
+[package]
+name = "redline"
+version = "0.2.0"
+edition = "2021"
+description = "Native screenshot annotation and layered vector editor with local AI inpainting and an MCP agent server"
+license = "Apache-2.0"
+repository = "https://github.com/UnsupervisedMedia/redline"
+readme = "README.md"
+keywords = ["screenshot", "annotation", "egui", "vector-editor", "inpainting"]
+publish = false
+build = "build.rs"
+
+[[bin]]
+name = "redline"
+path = "src/main.rs"
+
+[lib]
+name = "redline"
+path = "src/lib.rs"
+
+[dependencies]
+eframe    = "0.29"
+log       = "0.4"
+egui      = { version = "0.29", features = ["serde"] }
+image     = { version = "0.25", default-features = false, features = ["png","jpeg","webp","bmp","gif"] }
+imageproc = "0.25"
+vtracer   = "0.6"
+rayon     = "1"
+ab_glyph  = { version = "0.2", optional = true }
+pdfium-render = { version = "0.8", features = ["static"], optional = true }
+
+# Agent server (Phase 2). Gated behind `agent-server` feature.
+tokio     = { version = "1", features = ["rt-multi-thread", "macros", "sync", "net", "time"], optional = true }
+tokio-util = { version = "0.7", optional = true }
+reqwest   = { version = "0.12", features = ["json", "blocking"], optional = true }
+rmcp      = { version = "1.7", features = ["server", "macros", "transport-streamable-http-server"], optional = true }
+axum      = { version = "0.8", optional = true }
+thiserror = { version = "1", optional = true }
+schemars  = { version = "1", features = ["uuid1"], optional = true }
+
+# Lama-Cleaner embedded webview (lama-webview feature, Linux only)
+gtk = { version = "0.18", optional = true }
+wry = { version = "0.53", default-features = true, optional = true }
+
+# Native inpaint engine (native-inpaint feature). ONNX Runtime via `ort`.
+ort = { version = "=2.0.0-rc.10", default-features = false, features = ["ndarray", "load-dynamic", "cuda"], optional = true }
+ndarray = { version = "0.16", optional = true }
+
+# Native generative engine (native-generative feature). Stable Diffusion via candle.
+# Pinned to 0.10.2 — the version this spike actually built + ran against (see sd_candle.rs).
+candle-core = { version = "=0.10.2", optional = true, features = ["cuda"] }
+candle-transformers = { version = "=0.10.2", optional = true }
+candle-nn = { version = "=0.10.2", optional = true, features = ["cuda"] }
+hf-hub = { version = "0.4", optional = true }
+tokenizers = { version = "0.21", optional = true, default-features = false, features = ["onig"] }
+
+bincode   = "1"
+sha2      = "0.10"
+walkdir   = "2"
+kurbo = "0.11"
+flo_curves = "0.3"
+arboard   = "3"
+uuid      = { version = "1", features = ["v4", "v5", "serde"] }
+serde     = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono    = { version = "0.4", features = ["serde"] }
+rfd       = "0.15"
+dirs-next = "2"
+ashpd = { version = "0.13", default-features = false, features = ["async-io", "screenshot"] }
+pollster = "0.4.0"
+egui_extras = { version = "0.29", features = ["svg"] }
+base64 = "0.22"
+resvg = "0.43"
+usvg = "0.43"
+tiny-skia = "0.11"
+
+[features]
+default = ["agent-server"]
+pdf = ["pdfium-render"]
+agent-server = ["dep:tokio", "dep:tokio-util", "dep:rmcp", "dep:axum", "dep:thiserror", "dep:schemars", "dep:ab_glyph"]
+local-ai = ["agent-server", "dep:reqwest"]
+lama-webview = ["dep:gtk", "dep:wry"]
+native-inpaint = ["dep:ort", "dep:ndarray", "dep:reqwest"]
+native-generative = [
+  "native-inpaint",
+  "dep:candle-core",
+  "dep:candle-transformers",
+  "dep:candle-nn",
+  "dep:hf-hub",
+  "dep:tokenizers",
+]
+
+[dev-dependencies]
+reqwest = { version = "0.12", features = ["blocking", "json"] }
+wiremock = "0.6"

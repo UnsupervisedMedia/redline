@@ -1,0 +1,24 @@
+{
+  "models": [
+    {
+      "id": "lama-fp32",
+      "kind": "removal",
+      "filename": "lama_fp32.onnx",
+      "url": "https://huggingface.co/Carve/LaMa-ONNX/resolve/main/lama_fp32.onnx",
+      "sha256": "1faef5301d78db7dda502fe59966957ec4b79dd64e16f03ed96913c7a4eb68d6",
+      "size_bytes": 208044816
+    },
+    {
+      "id": "sd15-inpaint",
+      "kind": "generative",
+      "hf_repo": "stable-diffusion-v1-5/stable-diffusion-inpainting",
+      "base_resolution": 512
+    },
+    {
+      "id": "sdxl-inpaint",
+      "kind": "generative",
+      "hf_repo": "diffusers/stable-diffusion-xl-1.0-inpainting-0.1",
+      "base_resolution": 768
+    }
+  ]
+}

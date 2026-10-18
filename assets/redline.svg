@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <clipPath id="photo">
+      <rect x="28" y="36" width="200" height="152" rx="14"/>
+    </clipPath>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1E1E30"/>
+      <stop offset="100%" stop-color="#2A1A2E"/>
+    </linearGradient>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8EC5E6"/>
+      <stop offset="100%" stop-color="#C8DFF0"/>
+    </linearGradient>
+    <linearGradient id="penGrad" x1="0" y1="-1" x2="0" y2="1" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF5252"/>
+      <stop offset="100%" stop-color="#B71C1C"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App icon background -->
+  <rect width="256" height="256" rx="52" fill="url(#bgGrad)"/>
+
+  <!-- Photo/image frame background -->
+  <rect x="28" y="36" width="200" height="152" rx="14" fill="#E8EDF3"/>
+
+  <!-- Sky -->
+  <rect x="28" y="36" width="200" height="80" fill="url(#skyGrad)" clip-path="url(#photo)"/>
+
+  <!-- Sun -->
+  <circle cx="186" cy="70" r="19" fill="#FFD54F" clip-path="url(#photo)"/>
+  <circle cx="186" cy="70" r="14" fill="#FFE57A" clip-path="url(#photo)"/>
+
+  <!-- Far hills -->
+  <ellipse cx="70" cy="188" rx="80" ry="58" fill="#7AB876" clip-path="url(#photo)"/>
+  <ellipse cx="190" cy="188" rx="80" ry="52" fill="#5E9E5C" clip-path="url(#photo)"/>
+
+  <!-- Ground -->
+  <rect x="28" y="155" width="200" height="33" fill="#8CC87A" clip-path="url(#photo)"/>
+
+  <!-- Photo frame border -->
+  <rect x="28" y="36" width="200" height="152" rx="14" fill="none" stroke="#CBD3DC" stroke-width="2"/>
+
+  <!-- THE RED LINE — the signature RedLine element -->
+  <line x1="50" y1="214" x2="202" y2="52" stroke="#E53935" stroke-width="13" stroke-linecap="round"/>
+
+  <!-- Marker pen at the top end of the red line -->
+  <!-- Rotated ~44° so the tip aligns with the line direction -->
+  <g transform="translate(200, 48) rotate(44)">
+    <!-- Pen clip / cap -->
+    <rect x="-8" y="-38" width="16" height="12" rx="4" fill="#9E9E9E"/>
+    <!-- Pen body -->
+    <rect x="-8" y="-26" width="16" height="32" rx="4" fill="#E53935"/>
+    <!-- Pen body highlight -->
+    <rect x="-5" y="-24" width="5" height="28" rx="2" fill="#EF5350" opacity="0.5"/>
+    <!-- Pen tip cone -->
+    <polygon points="-8,6 8,6 0,22" fill="#C62828"/>
+    <!-- Pen tip point -->
+    <circle cx="0" cy="22" r="3" fill="#212121"/>
+  </g>
+</svg>

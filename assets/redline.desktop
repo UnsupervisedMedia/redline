@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=RedLine
+Comment=Image markup and annotation tool
+Exec=redline
+Icon=redline
+Terminal=false
+Type=Application
+Categories=Graphics;Utility;
+Keywords=image;markup;annotation;screenshot;
+StartupWMClass=redline
