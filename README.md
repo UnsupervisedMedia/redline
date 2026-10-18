@@ -20,7 +20,7 @@ A native, GPU-accelerated (Rust + [egui](https://github.com/emilk/egui)) tool fo
 | Windows | Built and unit-tested in CI; screen capture is not implemented. Not manually tested. |
 
 ## Install
-Download a binary from [Releases](../../releases) (Linux x86_64, macOS arm64, Windows x86_64), or build from source.
+Download a binary from [Releases](../../releases) (Linux x86_64, macOS arm64 and Intel, Windows x86_64), or build from source.
 
 ## Build from source
 ```sh

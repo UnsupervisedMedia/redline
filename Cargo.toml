@@ -1,6 +1,6 @@
 [package]
 name = "redline"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 description = "Native screenshot annotation and layered vector editor with local AI inpainting and an MCP agent server"
 license = "Apache-2.0"
