@@ -44,7 +44,7 @@ wry = { version = "0.53", default-features = true, optional = true }
 
 # Native inpaint engine (native-inpaint feature). ONNX Runtime via `ort`.
 ort = { version = "=2.0.0-rc.10", default-features = false, features = ["ndarray", "load-dynamic", "cuda"], optional = true }
-ndarray = { version = "0.16", optional = true }
+ndarray = { version = "0.17", optional = true }
 
 # Native generative engine (native-generative feature). Stable Diffusion via candle.
 # Pinned to 0.10.2 — the version this spike actually built + ran against (see sd_candle.rs).
