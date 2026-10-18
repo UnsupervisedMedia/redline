@@ -16,7 +16,8 @@ A native, GPU-accelerated (Rust + [egui](https://github.com/emilk/egui)) tool fo
 | Platform | Status |
 |---|---|
 | Linux (X11 / Wayland) | Developed and tested here |
-| macOS, Windows | Built and unit-tested in CI; screen capture relies on the Linux XDG portal and is not available there. Not manually tested. |
+| macOS | Built and unit-tested in CI; screen capture uses the Linux XDG portal, so use "open file" instead. Not manually tested. |
+| Windows | Built and unit-tested in CI; screen capture is not implemented. Not manually tested. |
 
 ## Install
 Download a binary from [Releases](../../releases) (Linux x86_64, macOS arm64, Windows x86_64), or build from source.

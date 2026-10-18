@@ -4,7 +4,6 @@
 //! The portal call runs on a worker thread; the result is delivered via
 //! a channel that the egui update loop polls each frame.
 
-use ashpd::desktop::screenshot::Screenshot;
 use std::path::PathBuf;
 use std::sync::mpsc::{channel, Receiver};
 
@@ -94,6 +93,32 @@ fn hex(b: u8) -> Option<u8> {
 /// On GNOME the user can either "Save" (portal returns a file URI) or "Copy"
 /// (portal returns an error and the image lands on the clipboard). We try the
 /// file path first and fall back to the clipboard so both buttons work.
+#[cfg(not(windows))]
+fn portal_screenshot(interactive: bool) -> Result<PathBuf, String> {
+    use ashpd::desktop::screenshot::Screenshot;
+    pollster::block_on(async move {
+        Screenshot::request()
+            .interactive(interactive)
+            .modal(false)
+            .send()
+            .await
+            .map_err(|e| e.to_string())?
+            .response()
+            .map_err(|e| e.to_string())
+            .and_then(|s| {
+                let uri = s.uri().as_str().to_string();
+                uri.strip_prefix("file://")
+                    .map(|p| PathBuf::from(percent_decode(p)))
+                    .ok_or_else(|| format!("non-file URI: {}", uri))
+            })
+    })
+}
+
+#[cfg(windows)]
+fn portal_screenshot(_interactive: bool) -> Result<PathBuf, String> {
+    Err("screen capture is not supported on Windows yet; open an image file instead".to_string())
+}
+
 pub fn start(interactive: bool, decode: bool) -> Receiver<CaptureResult> {
     let (tx, rx) = channel();
     std::thread::spawn(move || {
@@ -104,22 +129,7 @@ pub fn start(interactive: bool, decode: bool) -> Receiver<CaptureResult> {
         // is still on the clipboard).
         let pre_dims = try_clipboard_dims();
 
-        let portal = pollster::block_on(async move {
-            Screenshot::request()
-                .interactive(interactive)
-                .modal(false)
-                .send()
-                .await
-                .map_err(|e| e.to_string())?
-                .response()
-                .map_err(|e| e.to_string())
-                .and_then(|s| {
-                    let uri = s.uri().as_str().to_string();
-                    uri.strip_prefix("file://")
-                        .map(|p| PathBuf::from(percent_decode(p)))
-                        .ok_or_else(|| format!("non-file URI: {}", uri))
-                })
-        });
+        let portal = portal_screenshot(interactive);
 
         let result: CaptureResult = match &portal {
             Ok(path) => {

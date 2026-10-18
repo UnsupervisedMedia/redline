@@ -5,3 +5,7 @@
 .mcp.json
 .superpowers/
 .worktrees/
+# planning/agent scratch belongs in GitHub issues, not the repo
+docs/superpowers/
+Findings-*.md
+BACKLOG.md
