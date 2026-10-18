@@ -58,7 +58,7 @@ bincode   = "1"
 sha2      = "0.10"
 walkdir   = "2"
 kurbo = "0.11"
-flo_curves = "0.3"
+flo_curves = "0.8"
 arboard   = "3"
 uuid      = { version = "1", features = ["v4", "v5", "serde"] }
 serde     = { version = "1", features = ["derive"] }
