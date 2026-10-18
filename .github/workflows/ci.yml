@@ -68,7 +68,7 @@ jobs:
   # Compile-check the optional Cargo features CI can build. `native-generative` is
   # excluded: it hard-requires the CUDA toolkit, which hosted runners lack (build it locally).
   features:
-    name: features ({{ matrix.feature }})
+    name: features (${{ matrix.feature }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
