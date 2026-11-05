@@ -5958,6 +5958,7 @@ dependencies = [
  "image 0.25.10",
  "imageproc",
  "kurbo 0.11.3",
+ "libc",
  "log",
  "ndarray",
  "ort",
