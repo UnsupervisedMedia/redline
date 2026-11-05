@@ -1,5 +1,5 @@
 //! GUI-free boolean path operations over `BezierPath` node lists, backed by
-//! `flo_curves` 0.3. All functions take/return `(Vec<BezierNode>, bool /*closed*/)`
+//! `flo_curves` 0.8. All functions take/return `(Vec<BezierNode>, bool /*closed*/)`
 //! and operate purely on geometry (no scene-graph / egui dependency), so they are
 //! unit-testable in isolation.
 //!
@@ -104,7 +104,7 @@ pub fn unite(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, bool)>
     };
     let mut acc: Vec<SimpleBezierPath> = vec![first];
     for p in it {
-        acc = path_add::<_, _, SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
+        acc = path_add::<SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
     }
     from_flo(acc)
 }
@@ -118,7 +118,7 @@ pub fn subtract(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, boo
     };
     let mut acc: Vec<SimpleBezierPath> = vec![first];
     for p in it {
-        acc = path_sub::<_, _, SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
+        acc = path_sub::<SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
     }
     from_flo(acc)
 }
@@ -132,12 +132,12 @@ pub fn intersect(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, bo
     };
     let mut acc: Vec<SimpleBezierPath> = vec![first];
     for p in it {
-        acc = path_intersect::<_, _, SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
+        acc = path_intersect::<SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
     }
     from_flo(acc)
 }
 
-/// Exclude / symmetric difference: (A ∪ B) − (A ∩ B). For ≥3 inputs, fold pairwise.
+/// Exclude / symmetric difference: (A − B) ∪ (B − A). For ≥3 inputs, fold pairwise.
 pub fn exclude(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, bool)> {
     let flo = to_flo(inputs);
     if flo.len() < 2 {
@@ -146,9 +146,10 @@ pub fn exclude(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, bool
     let mut acc: Vec<SimpleBezierPath> = vec![flo[0].clone()];
     for p in flo.into_iter().skip(1) {
         let other = vec![p];
-        let union = path_add::<_, _, SimpleBezierPath>(&acc, &other, BOOL_ACCURACY);
-        let inter = path_intersect::<_, _, SimpleBezierPath>(&acc, &other, BOOL_ACCURACY);
-        acc = path_sub::<_, _, SimpleBezierPath>(&union, &inter, BOOL_ACCURACY);
+        let mut left = path_sub::<SimpleBezierPath>(&acc, &other, BOOL_ACCURACY);
+        let right = path_sub::<SimpleBezierPath>(&other, &acc, BOOL_ACCURACY);
+        left.extend(right);
+        acc = left;
     }
     from_flo(acc)
 }
@@ -265,6 +266,16 @@ mod tests {
             "A⊕B ≈ 150, got {}",
             total_area(&out)
         );
+    }
+
+    #[test]
+    fn exclude_folds_three_overlapping_shapes() {
+        let a = rect(0.0, 0.0, 10.0, 10.0);
+        let b = rect(5.0, 5.0, 15.0, 15.0);
+        let c = rect(10.0, 0.0, 20.0, 10.0);
+        let out = exclude(&[a, b, c]);
+        // A xor B has area 150; C overlaps that result by 25.
+        assert!((total_area(&out) - 200.0).abs() < 3.0);
     }
 
     #[test]
