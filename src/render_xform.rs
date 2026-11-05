@@ -395,7 +395,7 @@ pub fn draw_transformed(
             let c = corners_in_screen(*rect, world, project);
             painter.add(egui::Shape::closed_line(
                 c.to_vec(),
-                Stroke::new(2.0, accent),
+                Stroke::new(2.0_f32, accent),
             ));
         }
 
@@ -486,7 +486,11 @@ pub fn draw_transformed(
             let screen_pos = m(*pos);
             let scaled_radius = *radius * view_zoom;
             painter.circle_filled(screen_pos, scaled_radius, ann_color);
-            painter.circle_stroke(screen_pos, scaled_radius, Stroke::new(1.5, Color32::WHITE));
+            painter.circle_stroke(
+                screen_pos,
+                scaled_radius,
+                Stroke::new(1.5_f32, Color32::WHITE),
+            );
             let font_size = (scaled_radius * 1.1).max(10.0);
             painter.text(
                 screen_pos,
@@ -619,7 +623,7 @@ pub fn draw_transformed(
                     ann_color.b(),
                     ann_color.a() / 2,
                 );
-                painter.rect_stroke(bb, 3.0, egui::Stroke::new(1.0, outline));
+                painter.rect_stroke(bb, 3.0, egui::Stroke::new(1.0_f32, outline));
                 painter.text(
                     screen_pos + egui::vec2(3.0, 3.0),
                     egui::Align2::LEFT_TOP,

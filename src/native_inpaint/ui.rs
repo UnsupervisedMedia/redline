@@ -663,7 +663,7 @@ pub fn show(ctx: &egui::Context, state: &mut AppState) {
                     ui.painter().circle_stroke(
                         p,
                         brush_radius * scale,
-                        egui::Stroke::new(1.5, egui::Color32::from_rgb(255, 80, 80)),
+                        egui::Stroke::new(1.5_f32, egui::Color32::from_rgb(255, 80, 80)),
                     );
                 }
             }

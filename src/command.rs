@@ -771,7 +771,7 @@ fn apply_boolean(canvas: &mut CanvasState, op: BoolOp, ids: &[Uuid]) -> Option<C
 mod tests {
     use super::*;
     use crate::state::CanvasState;
-    use crate::types::{Annotation, BezierNode, LineStyle, NodeProp, NodeType};
+    use crate::types::{Annotation, NodeProp};
     use egui::{Color32, Pos2, Rect};
 
     fn human() -> ParticipantId {

@@ -129,7 +129,7 @@ impl RedLineApp {
                 egui::Frame::none()
                     .fill(theme.toolbar_bg)
                     .inner_margin(egui::Margin::symmetric(10.0, 7.0))
-                    .stroke(egui::Stroke::new(1.0, theme.divider)),
+                    .stroke(egui::Stroke::new(1.0_f32, theme.divider)),
             )
             .show(ctx, |ui| {
                 crate::toolbar::show_capture_bar(ui, &mut self.state);
@@ -140,7 +140,7 @@ impl RedLineApp {
                 egui::Frame::none()
                     .fill(theme.panel_bg)
                     .inner_margin(egui::Margin::symmetric(10.0, 6.0))
-                    .stroke(egui::Stroke::new(1.0, theme.divider)),
+                    .stroke(egui::Stroke::new(1.0_f32, theme.divider)),
             )
             .show(ctx, |ui| {
                 crate::toolbar::show_view_bar(ui, &mut self.state);
@@ -204,7 +204,7 @@ impl RedLineApp {
                 egui::Frame::none()
                     .fill(theme.toolbar_bg)
                     .inner_margin(egui::Margin::symmetric(10.0, 4.0))
-                    .stroke(egui::Stroke::new(1.0, theme.divider)),
+                    .stroke(egui::Stroke::new(1.0_f32, theme.divider)),
             )
             .show(ctx, |ui| {
                 crate::toolbar::show_status_bar(ui, &mut self.state);

@@ -824,11 +824,15 @@ fn draw(ui: &mut egui::Ui, rs: &mut RegionSelect) -> Outcome {
             ] {
                 painter.rect_filled(band, 0.0, dim);
             }
-            painter.rect_stroke(sel, 0.0, Stroke::new(1.0, Color32::from_white_alpha(220)));
+            painter.rect_stroke(
+                sel,
+                0.0,
+                Stroke::new(1.0_f32, Color32::from_white_alpha(220)),
+            );
             painter.rect_stroke(
                 sel.expand(1.0),
                 0.0,
-                Stroke::new(1.0, Color32::from_black_alpha(120)),
+                Stroke::new(1.0_f32, Color32::from_black_alpha(120)),
             );
             for h in Handle::CORNERS.iter().chain(Handle::EDGES.iter()) {
                 let p = h.pos_on(sel);
@@ -840,7 +844,7 @@ fn draw(ui: &mut egui::Ui, rs: &mut RegionSelect) -> Outcome {
                 painter.rect_stroke(
                     Rect::from_center_size(p, Vec2::splat(HANDLE_R * 2.0)),
                     2.0,
-                    Stroke::new(1.0, Color32::from_black_alpha(160)),
+                    Stroke::new(1.0_f32, Color32::from_black_alpha(160)),
                 );
             }
             if let Some(px) = rs.selection_px(view) {
@@ -858,11 +862,11 @@ fn draw(ui: &mut egui::Ui, rs: &mut RegionSelect) -> Outcome {
             let g = Color32::from_white_alpha(70);
             painter.line_segment(
                 [Pos2::new(screen.min.x, p.y), Pos2::new(screen.max.x, p.y)],
-                Stroke::new(1.0, g),
+                Stroke::new(1.0_f32, g),
             );
             painter.line_segment(
                 [Pos2::new(p.x, screen.min.y), Pos2::new(p.x, screen.max.y)],
-                Stroke::new(1.0, g),
+                Stroke::new(1.0_f32, g),
             );
         }
         if rs.show_magnifier {
@@ -974,7 +978,11 @@ fn draw_size_badge(painter: &egui::Painter, sel: Rect, screen: Rect, px: [u32; 4
     };
     let rect = Rect::from_min_size(origin, size);
     painter.rect_filled(rect, 6.0, Color32::from_rgba_unmultiplied(20, 22, 26, 235));
-    painter.rect_stroke(rect, 6.0, Stroke::new(1.0, Color32::from_white_alpha(40)));
+    painter.rect_stroke(
+        rect,
+        6.0,
+        Stroke::new(1.0_f32, Color32::from_white_alpha(40)),
+    );
     painter.galley(rect.min + pad, galley, Color32::WHITE);
 }
 
@@ -1017,13 +1025,17 @@ fn draw_magnifier(painter: &egui::Painter, rs: &RegionSelect, view: Rect, screen
         Color32::from_rgba_unmultiplied(20, 22, 26, 240),
     );
     painter.image(tex.id(), rect, uv, Color32::WHITE);
-    painter.rect_stroke(rect, 6.0, Stroke::new(1.0, Color32::from_white_alpha(90)));
+    painter.rect_stroke(
+        rect,
+        6.0,
+        Stroke::new(1.0_f32, Color32::from_white_alpha(90)),
+    );
     // Centre pixel marker.
     let cell = side / MAGNIFIER_SPAN_PX;
     painter.rect_stroke(
         Rect::from_center_size(rect.center(), Vec2::splat(cell)),
         0.0,
-        Stroke::new(1.0, Color32::from_rgb(255, 210, 90)),
+        Stroke::new(1.0_f32, Color32::from_rgb(255, 210, 90)),
     );
 
     // Hex readout of the exact pixel under the crosshair.
@@ -1065,6 +1077,10 @@ fn draw_hint_bar(painter: &egui::Painter, screen: Rect, has_sel: bool) {
         size,
     );
     painter.rect_filled(rect, 9.0, Color32::from_rgba_unmultiplied(18, 20, 24, 232));
-    painter.rect_stroke(rect, 9.0, Stroke::new(1.0, Color32::from_white_alpha(45)));
+    painter.rect_stroke(
+        rect,
+        9.0,
+        Stroke::new(1.0_f32, Color32::from_white_alpha(45)),
+    );
     painter.galley(rect.min + pad, galley, Color32::WHITE);
 }

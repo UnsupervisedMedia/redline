@@ -15,6 +15,8 @@ pub fn sync_webview_visibility(state: &mut LamaCleanerState, visible: bool) {
 
 /// Called each frame when `AppMode::LamaCleaner` is active.
 pub fn show(ctx: &eframe::egui::Context, frame: &eframe::Frame, state: &mut LamaCleanerState) {
+    #[cfg(not(feature = "lama-webview"))]
+    let _ = frame;
     state.drain_msgs();
 
     // Kick off setup check the first time we're shown.
