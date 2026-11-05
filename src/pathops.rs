@@ -118,6 +118,9 @@ pub fn subtract(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, boo
     };
     let mut acc: Vec<SimpleBezierPath> = vec![first];
     for p in it {
+        if acc.is_empty() {
+            break;
+        }
         acc = path_sub::<SimpleBezierPath>(&acc, &vec![p], BOOL_ACCURACY);
     }
     from_flo(acc)
@@ -146,6 +149,10 @@ pub fn exclude(inputs: &[(Vec<BezierNode>, bool)]) -> Vec<(Vec<BezierNode>, bool
     let mut acc: Vec<SimpleBezierPath> = vec![flo[0].clone()];
     for p in flo.into_iter().skip(1) {
         let other = vec![p];
+        if acc.is_empty() {
+            acc = other;
+            continue;
+        }
         let mut left = path_sub::<SimpleBezierPath>(&acc, &other, BOOL_ACCURACY);
         let right = path_sub::<SimpleBezierPath>(&other, &acc, BOOL_ACCURACY);
         left.extend(right);
@@ -256,6 +263,13 @@ mod tests {
     }
 
     #[test]
+    fn subtract_stays_empty_after_first_operand_is_removed() {
+        let a = rect(0.0, 0.0, 10.0, 10.0);
+        let b = rect(20.0, 0.0, 30.0, 10.0);
+        assert!(subtract(&[a.clone(), a, b]).is_empty());
+    }
+
+    #[test]
     fn exclude_is_union_minus_intersection() {
         let a = rect(0.0, 0.0, 10.0, 10.0);
         let b = rect(5.0, 5.0, 15.0, 15.0);
@@ -276,6 +290,14 @@ mod tests {
         let out = exclude(&[a, b, c]);
         // A xor B has area 150; C overlaps that result by 25.
         assert!((total_area(&out) - 200.0).abs() < 3.0);
+    }
+
+    #[test]
+    fn exclude_recovers_after_identical_shapes_cancel() {
+        let a = rect(0.0, 0.0, 10.0, 10.0);
+        let b = rect(20.0, 0.0, 30.0, 10.0);
+        let out = exclude(&[a.clone(), a, b]);
+        assert!((total_area(&out) - 100.0).abs() < 2.0);
     }
 
     #[test]
