@@ -144,10 +144,18 @@ impl LamaOrt {
         let infer_mask = image::imageops::resize(mask, tw, th, FilterType::Nearest);
 
         let (image_arr, mask_arr) = Self::to_tensors(&infer_img, &infer_mask);
-        let image_tensor =
-            Tensor::from_array(image_arr).map_err(|e| InpaintError::Inference(e.to_string()))?;
-        let mask_tensor =
-            Tensor::from_array(mask_arr).map_err(|e| InpaintError::Inference(e.to_string()))?;
+        // ort uses ndarray 0.16 internally. Pass raw shape and data so this
+        // module can use ndarray 0.17 without mixing incompatible array types.
+        let image_shape = image_arr.shape().to_vec();
+        let (image_data, image_offset) = image_arr.into_raw_vec_and_offset();
+        debug_assert_eq!(image_offset, Some(0));
+        let mask_shape = mask_arr.shape().to_vec();
+        let (mask_data, mask_offset) = mask_arr.into_raw_vec_and_offset();
+        debug_assert_eq!(mask_offset, Some(0));
+        let image_tensor = Tensor::from_array((image_shape, image_data))
+            .map_err(|e| InpaintError::Inference(e.to_string()))?;
+        let mask_tensor = Tensor::from_array((mask_shape, mask_data))
+            .map_err(|e| InpaintError::Inference(e.to_string()))?;
 
         let outputs = session
             .run(ort::inputs! {
