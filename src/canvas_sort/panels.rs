@@ -29,7 +29,7 @@ pub fn draw_minimap(painter: &egui::Painter, state: &CanvasSortState) {
     painter.rect_stroke(
         mm_rect,
         4.0,
-        Stroke::new(1.0, Color32::from_white_alpha(80)),
+        Stroke::new(1.0_f32, Color32::from_white_alpha(80)),
     );
 
     // Canvas bounds → minimap transform
@@ -62,7 +62,7 @@ pub fn draw_minimap(painter: &egui::Painter, state: &CanvasSortState) {
     painter.rect_stroke(
         vr,
         1.0,
-        Stroke::new(1.5, Color32::from_rgb(0xFF, 0xFF, 0x44)),
+        Stroke::new(1.5_f32, Color32::from_rgb(0xFF, 0xFF, 0x44)),
     );
 }
 

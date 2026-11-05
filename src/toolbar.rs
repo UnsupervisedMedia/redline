@@ -173,9 +173,17 @@ pub fn show_tool_bar(ui: &mut Ui, state: &mut AppState) {
         let mut tool_button = |ui: &mut Ui, mode: AppMode, label: &str, tip: &str| {
             let active = state.app_mode == mode;
             let (fill, fg, stroke) = if active {
-                (t.accent_subtle, t.accent, Stroke::new(1.0, t.accent_dim))
+                (
+                    t.accent_subtle,
+                    t.accent,
+                    Stroke::new(1.0_f32, t.accent_dim),
+                )
             } else {
-                (t.surface_bg, t.text_muted, Stroke::new(1.0, t.border_idle))
+                (
+                    t.surface_bg,
+                    t.text_muted,
+                    Stroke::new(1.0_f32, t.border_idle),
+                )
             };
             if ui
                 .add(
@@ -660,7 +668,7 @@ pub(crate) fn primary_button(ui: &mut Ui, theme: &Theme, label: &str) -> egui::R
     ui.add(
         egui::Button::new(RichText::new(label).color(theme.on_accent).strong())
             .fill(theme.accent)
-            .stroke(Stroke::new(1.0, theme.border_active))
+            .stroke(Stroke::new(1.0_f32, theme.border_active))
             .rounding(egui::Rounding::same(7.0))
             .min_size(egui::vec2(0.0, 27.0)),
     )
@@ -677,7 +685,7 @@ pub(crate) fn secondary_button(
         enabled,
         egui::Button::new(RichText::new(label).color(theme.text_muted))
             .fill(theme.surface_bg)
-            .stroke(Stroke::new(1.0, theme.border_idle))
+            .stroke(Stroke::new(1.0_f32, theme.border_idle))
             .rounding(egui::Rounding::same(7.0))
             .min_size(egui::vec2(0.0, 27.0)),
     )
@@ -689,13 +697,13 @@ fn chip(ui: &mut Ui, theme: &Theme, label: &str, selected: bool) -> egui::Respon
         (
             theme.accent_subtle,
             theme.accent,
-            Stroke::new(1.0, theme.accent_dim),
+            Stroke::new(1.0_f32, theme.accent_dim),
         )
     } else {
         (
             Color32::TRANSPARENT,
             theme.text_muted,
-            Stroke::new(1.0, theme.border_idle),
+            Stroke::new(1.0_f32, theme.border_idle),
         )
     };
     ui.add(
@@ -1011,7 +1019,7 @@ pub fn show_toast(ctx: &egui::Context, state: &mut AppState) -> bool {
         .show(ctx, |ui| {
             egui::Frame::none()
                 .fill(a(theme.surface_bg, 0.97))
-                .stroke(Stroke::new(1.0, a(accent, 0.85)))
+                .stroke(Stroke::new(1.0_f32, a(accent, 0.85)))
                 .rounding(egui::Rounding::same(9.0))
                 .inner_margin(egui::Margin::symmetric(14.0, 9.0))
                 .shadow(egui::epaint::Shadow {
@@ -1296,11 +1304,11 @@ fn tool_button_frame(ui: &mut Ui, active: bool, theme: &Theme) -> (egui::Rect, e
         theme.surface_bg
     };
     let stroke = if active {
-        Stroke::new(1.5, theme.border_active)
+        Stroke::new(1.5_f32, theme.border_active)
     } else if hovered {
-        Stroke::new(1.0, theme.accent_dim)
+        Stroke::new(1.0_f32, theme.accent_dim)
     } else {
-        Stroke::new(1.0, theme.border_idle)
+        Stroke::new(1.0_f32, theme.border_idle)
     };
     ui.painter().rect_filled(rect, 7.0, fill);
     ui.painter().rect_stroke(rect, 7.0, stroke);
@@ -2768,7 +2776,7 @@ fn preset_card(
         rect,
         rounding,
         Stroke::new(
-            if selected { 1.5 } else { 1.0 },
+            if selected { 1.5 } else { 1.0_f32 },
             if selected {
                 theme.accent
             } else {
@@ -2794,7 +2802,7 @@ fn preset_card(
         thumb,
         egui::Rounding::same(2.0),
         Stroke::new(
-            1.0,
+            1.0_f32,
             if selected {
                 theme.accent
             } else {
@@ -2861,7 +2869,7 @@ fn canvas_preview(ui: &mut Ui, theme: &Theme, dlg: &crate::state::CanvasSizeDial
             );
         }
     }
-    painter.rect_stroke(crect, round, Stroke::new(1.0, theme.border_idle));
+    painter.rect_stroke(crect, round, Stroke::new(1.0_f32, theme.border_idle));
 }
 
 /// A 24×24 background-fill swatch. `None` fill renders a transparency checker.
@@ -2880,7 +2888,7 @@ fn bg_swatch(ui: &mut Ui, theme: &Theme, fill: Option<Color32>, selected: bool) 
         rect,
         egui::Rounding::same(4.0),
         Stroke::new(
-            if selected { 2.0 } else { 1.0 },
+            if selected { 2.0 } else { 1.0_f32 },
             if selected {
                 theme.accent
             } else {
@@ -2995,9 +3003,9 @@ fn color_swatch(ui: &mut Ui, color: Color32, selected: bool) -> egui::Response {
     let painter = ui.painter();
     painter.rect_filled(rect.shrink(2.0), 3.0, color);
     if selected {
-        painter.rect_stroke(rect, 3.0, Stroke::new(2.0, Color32::WHITE));
+        painter.rect_stroke(rect, 3.0, Stroke::new(2.0_f32, Color32::WHITE));
     } else {
-        painter.rect_stroke(rect, 3.0, Stroke::new(1.0, Color32::from_gray(80)));
+        painter.rect_stroke(rect, 3.0, Stroke::new(1.0_f32, Color32::from_gray(80)));
     }
     resp
 }
@@ -3358,7 +3366,7 @@ pub fn draw_countdown_overlay(ui: &mut Ui, remaining: f32, total: u32, accent: C
     painter.circle_stroke(
         center,
         radius,
-        egui::Stroke::new(3.0, egui::Color32::from_gray(60)),
+        egui::Stroke::new(3.0_f32, egui::Color32::from_gray(60)),
     );
 
     // Progress arc (white, sweeps CW from top)
@@ -3373,7 +3381,7 @@ pub fn draw_countdown_overlay(ui: &mut Ui, remaining: f32, total: u32, accent: C
         let t1 = start_angle + ((i + 1) as f32 / steps as f32) * sweep;
         let p0 = center + egui::vec2(t0.cos(), t0.sin()) * r;
         let p1 = center + egui::vec2(t1.cos(), t1.sin()) * r;
-        painter.line_segment([p0, p1], egui::Stroke::new(5.0, accent));
+        painter.line_segment([p0, p1], egui::Stroke::new(5.0_f32, accent));
     }
 
     // Countdown number
@@ -3629,7 +3637,7 @@ pub fn show_tab_bar(ui: &mut Ui, state: &mut AppState) {
             if is_active {
                 ui.painter().line_segment(
                     [rect.left_bottom(), rect.right_bottom()],
-                    egui::Stroke::new(2.0, t.accent),
+                    egui::Stroke::new(2.0_f32, t.accent),
                 );
             }
         }
@@ -3648,7 +3656,7 @@ pub fn show_tab_bar(ui: &mut Ui, state: &mut AppState) {
                         egui::pos2(indicator_x, first.top()),
                         egui::pos2(indicator_x, last.bottom()),
                     ],
-                    egui::Stroke::new(2.0, drag_indicator),
+                    egui::Stroke::new(2.0_f32, drag_indicator),
                 );
             }
         }
@@ -3806,7 +3814,7 @@ pub fn show_shortcuts_window(ctx: &egui::Context, state: &mut AppState) {
                                 egui::pos2(rect.min.x + 4.0, rect.center().y),
                                 egui::pos2(rect.max.x, rect.center().y),
                             ],
-                            egui::Stroke::new(1.0, t.dialog_row_border),
+                            egui::Stroke::new(1.0_f32, t.dialog_row_border),
                         );
                     });
                     ui.add_space(2.0);
@@ -3854,7 +3862,7 @@ pub fn show_shortcuts_window(ctx: &egui::Context, state: &mut AppState) {
                                         key_bg
                                     })
                                     .stroke(egui::Stroke::new(
-                                        1.0,
+                                        1.0_f32,
                                         if is_unbound {
                                             Color32::TRANSPARENT
                                         } else {

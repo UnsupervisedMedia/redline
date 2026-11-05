@@ -44,10 +44,6 @@ fn main() {
     generated.push_str("]\n");
 
     fs::write(out_file, generated).expect("write stamp defs");
-
-    if std::env::var("CARGO_FEATURE_NATIVE_INPAINT").is_ok() {
-        println!("cargo:warning=native-inpaint: ensure ONNX Runtime 1.22.x is installed (set ORT_DYLIB_PATH if libonnxruntime.so is not on the default loader path)");
-    }
 }
 
 /// Stamp a version string into the binary as the `REDLINE_VERSION` env var

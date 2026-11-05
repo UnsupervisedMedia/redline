@@ -482,8 +482,3 @@ const RECORDABLE_KEYS: &[egui::Key] = &[
     egui::Key::Insert,
     egui::Key::Tab,
 ];
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-}

@@ -124,7 +124,7 @@ fn draw_zones(state: &CanvasSortState, painter: &egui::Painter) {
         } else {
             c.linear_multiply(1.5)
         };
-        let border_w = if is_selected { 2.0 } else { 1.5 };
+        let border_w = if is_selected { 2.0 } else { 1.5_f32 };
         painter.rect_stroke(screen_rect, 4.0, Stroke::new(border_w, border_color));
 
         // Label
@@ -170,7 +170,7 @@ fn draw_zone_handles(painter: &egui::Painter, state: &CanvasSortState, canvas_re
         let screen_h = state.to_screen(*h);
         let hr = Rect::from_center_size(screen_h, Vec2::splat(hs));
         painter.rect_filled(hr, 2.0, Color32::WHITE);
-        painter.rect_stroke(hr, 2.0, Stroke::new(1.0, Color32::from_gray(80)));
+        painter.rect_stroke(hr, 2.0, Stroke::new(1.0_f32, Color32::from_gray(80)));
     }
 }
 
@@ -346,7 +346,7 @@ fn draw_stacks(state: &CanvasSortState, painter: &egui::Painter) {
                 } else {
                     c.linear_multiply(0.5)
                 };
-                painter.rect_stroke(cell_rect, 2.0, Stroke::new(1.0, border_c));
+                painter.rect_stroke(cell_rect, 2.0, Stroke::new(1.0_f32, border_c));
             }
         } else {
             // Fanned pile: draw up to 4 cards with offset so depth is visible
@@ -378,7 +378,7 @@ fn draw_stacks(state: &CanvasSortState, painter: &egui::Painter) {
                 } else {
                     c.linear_multiply(0.6)
                 };
-                painter.rect_stroke(r, 2.0, Stroke::new(1.5, border_c));
+                painter.rect_stroke(r, 2.0, Stroke::new(1.5_f32, border_c));
 
                 // Count badge on the front card
                 if layer == 0.0 {
@@ -448,7 +448,7 @@ fn draw_sticky_notes(state: &CanvasSortState, painter: &egui::Painter) {
         painter.rect_stroke(
             screen_rect,
             4.0,
-            Stroke::new(1.0, note.color.linear_multiply(0.7)),
+            Stroke::new(1.0_f32, note.color.linear_multiply(0.7)),
         );
         let font_size = (note.font_size * state.zoom).clamp(6.0, 32.0);
         let text_rect = screen_rect.shrink(6.0);
@@ -474,7 +474,7 @@ fn draw_selection_highlights(state: &CanvasSortState, painter: &egui::Painter) {
     };
 
     let sel_color = Color32::from_rgb(0x44, 0x88, 0xFF);
-    let sel_stroke = Stroke::new(2.0, sel_color);
+    let sel_stroke = Stroke::new(2.0_f32, sel_color);
 
     for id in &state.selected_images {
         if let Some(img) = s.image_by_id(*id) {
@@ -498,7 +498,7 @@ fn draw_selection_highlights(state: &CanvasSortState, painter: &egui::Painter) {
             painter.rect_stroke(
                 sr,
                 1.0,
-                Stroke::new(2.0, Color32::from_rgb(0xFF, 0xCC, 0x44)),
+                Stroke::new(2.0_f32, Color32::from_rgb(0xFF, 0xCC, 0x44)),
             );
         }
     }
@@ -527,7 +527,7 @@ fn draw_tool_overlay(state: &CanvasSortState, painter: &egui::Painter) {
             painter.rect_stroke(
                 sr,
                 0.0,
-                Stroke::new(1.5, Color32::from_rgb(0x44, 0x88, 0xFF)),
+                Stroke::new(1.5_f32, Color32::from_rgb(0x44, 0x88, 0xFF)),
             );
         }
         ToolInteraction::Drawing {
@@ -548,7 +548,7 @@ fn draw_tool_overlay(state: &CanvasSortState, painter: &egui::Painter) {
                 _ => (Color32::TRANSPARENT, Color32::WHITE),
             };
             painter.rect_filled(sr, 2.0, fill);
-            painter.rect_stroke(sr, 2.0, Stroke::new(1.5, stroke_c));
+            painter.rect_stroke(sr, 2.0, Stroke::new(1.5_f32, stroke_c));
         }
         ToolInteraction::DraggingImages { .. } => {
             // Images move live — nothing extra to draw

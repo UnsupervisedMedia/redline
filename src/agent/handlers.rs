@@ -3102,7 +3102,6 @@ mod tests {
     #[cfg(feature = "local-ai")]
     #[test]
     fn record_tool_wish_appends_memory_entry() {
-        use std::time::Duration;
         use tokio::sync::oneshot;
         let mut state = AppState::default();
         let (tx, rx) = oneshot::channel();

@@ -150,7 +150,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
         painter.rect_stroke(
             rect,
             egui::Rounding::ZERO,
-            Stroke::new(1.0, Color32::from_white_alpha(28)),
+            Stroke::new(1.0_f32, Color32::from_white_alpha(28)),
         );
     }
 
@@ -219,7 +219,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                     let dash_len = 6.0_f32;
                     let gap_len = 4.0_f32;
                     let stroke = egui::Stroke::new(
-                        1.5,
+                        1.5_f32,
                         egui::Color32::from_rgba_unmultiplied(255, 220, 0, 180),
                     );
                     for &(a, b) in &[
@@ -285,7 +285,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                 painter.rect_stroke(
                     projected_r,
                     3.0,
-                    Stroke::new(1.5, Color32::from_white_alpha(120)),
+                    Stroke::new(1.5_f32, Color32::from_white_alpha(120)),
                 );
                 // Show annotation note as tooltip if present.
                 if let Some(note) = &ann.label {
@@ -312,7 +312,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                 if let ShapeData::ImageLayer { rect, .. } = &ann.shape {
                     let screen_rect = Rect::from_min_max(project(rect.min), project(rect.max));
                     let handle_color = state.settings.theme().accent;
-                    painter.rect_stroke(screen_rect, 0.0, Stroke::new(1.5, handle_color));
+                    painter.rect_stroke(screen_rect, 0.0, Stroke::new(1.5_f32, handle_color));
                     for corner in image_layer_corners(screen_rect) {
                         painter.rect_filled(
                             Rect::from_center_size(corner, Vec2::splat(HANDLE_SIZE)),
@@ -339,14 +339,14 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                 if let Some(ann) = state.canvas.annotations.iter().find(|a| a.id == sel_id) {
                     let r = ann.shape.bounding_rect().expand(3.0);
                     let sr = Rect::from_min_max(project(r.min), project(r.max));
-                    painter.rect_stroke(sr, 3.0, Stroke::new(1.5, accent));
+                    painter.rect_stroke(sr, 3.0, Stroke::new(1.5_f32, accent));
                 }
             }
             // Rubber-band rectangle.
             if let (Some(bs), Some(bc)) = (band_start, band_current) {
                 let band_img_rect = Rect::from_two_pos(bs, bc);
                 let sr = Rect::from_min_max(project(band_img_rect.min), project(band_img_rect.max));
-                painter.rect_stroke(sr, 0.0, Stroke::new(1.0, Color32::WHITE));
+                painter.rect_stroke(sr, 0.0, Stroke::new(1.0_f32, Color32::WHITE));
                 painter.rect_filled(sr, 0.0, Color32::from_white_alpha(15));
             }
         }
@@ -370,7 +370,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
             ];
             painter.add(egui::Shape::line(
                 outline.to_vec(),
-                Stroke::new(1.5, accent),
+                Stroke::new(1.5_f32, accent),
             ));
             // Square scale handles (corners + edge midpoints).
             for p in layout.corners.iter().chain(layout.edges.iter()) {
@@ -385,7 +385,7 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                 (layout.corners[0].x + layout.corners[1].x) * 0.5,
                 (layout.corners[0].y + layout.corners[1].y) * 0.5,
             );
-            painter.line_segment([top_center, layout.rotate], Stroke::new(1.5, accent));
+            painter.line_segment([top_center, layout.rotate], Stroke::new(1.5_f32, accent));
             painter.circle_filled(layout.rotate, HANDLE_SIZE * 0.5, accent);
             // Pivot marker (selection centre).
             let half = HANDLE_SIZE * 0.4;
@@ -394,14 +394,14 @@ pub fn show(ui: &mut Ui, state: &mut AppState) {
                     layout.center - egui::vec2(half, 0.0),
                     layout.center + egui::vec2(half, 0.0),
                 ],
-                Stroke::new(1.5, accent),
+                Stroke::new(1.5_f32, accent),
             );
             painter.line_segment(
                 [
                     layout.center - egui::vec2(0.0, half),
                     layout.center + egui::vec2(0.0, half),
                 ],
-                Stroke::new(1.5, accent),
+                Stroke::new(1.5_f32, accent),
             );
         }
     }
@@ -707,7 +707,7 @@ fn draw_annotation_full(
                     ann_color.b(),
                     ann_color.a() / 2,
                 );
-                painter.rect_stroke(bb, 3.0, egui::Stroke::new(1.0, outline));
+                painter.rect_stroke(bb, 3.0, egui::Stroke::new(1.0_f32, outline));
                 painter.text(
                     *pos + egui::vec2(3.0, 3.0),
                     egui::Align2::LEFT_TOP,
@@ -830,7 +830,7 @@ fn project_annotation(
 
 fn draw_step_marker(painter: &Painter, pos: Pos2, number: u32, radius: f32, color: Color32) {
     painter.circle_filled(pos, radius, color);
-    painter.circle_stroke(pos, radius, Stroke::new(1.5, Color32::WHITE));
+    painter.circle_stroke(pos, radius, Stroke::new(1.5_f32, Color32::WHITE));
     let font_size = (radius * 1.1).max(10.0);
     painter.text(
         pos,
@@ -947,7 +947,7 @@ pub fn draw_annotation(painter: &Painter, ann: &Annotation, color: Color32, acce
             }
         }
         ShapeData::FocusRegion { rect } => {
-            painter.rect_stroke(*rect, 0.0, Stroke::new(2.0, accent));
+            painter.rect_stroke(*rect, 0.0, Stroke::new(2.0_f32, accent));
         }
         ShapeData::LogicTag { pos, tag } => {
             let amber = accent;
@@ -1126,21 +1126,21 @@ fn draw_magnifier(
 
     painter.rect_filled(lens_rect.expand(3.0), 6.0, Color32::from_gray(15));
     painter.image(texture.id(), lens_rect, uv, Color32::WHITE);
-    painter.rect_stroke(lens_rect, 6.0, Stroke::new(2.0, accent));
+    painter.rect_stroke(lens_rect, 6.0, Stroke::new(2.0_f32, accent));
     // Crosshair at lens center
     painter.line_segment(
         [
             Pos2::new(lens_center.x - 6.0, lens_center.y),
             Pos2::new(lens_center.x + 6.0, lens_center.y),
         ],
-        Stroke::new(1.0, Color32::from_white_alpha(180)),
+        Stroke::new(1.0_f32, Color32::from_white_alpha(180)),
     );
     painter.line_segment(
         [
             Pos2::new(lens_center.x, lens_center.y - 6.0),
             Pos2::new(lens_center.x, lens_center.y + 6.0),
         ],
-        Stroke::new(1.0, Color32::from_white_alpha(180)),
+        Stroke::new(1.0_f32, Color32::from_white_alpha(180)),
     );
 }
 
@@ -1264,7 +1264,7 @@ fn show_crop_confirm(ctx: &Context, state: &mut AppState, img_rect: Rect) {
         egui::Order::Foreground,
         egui::Id::new("redline-crop-outline"),
     ));
-    painter.rect_stroke(projected, 0.0, Stroke::new(2.0, Color32::WHITE));
+    painter.rect_stroke(projected, 0.0, Stroke::new(2.0_f32, Color32::WHITE));
     painter.rect_filled(projected, 0.0, Color32::from_white_alpha(20));
 
     egui::Area::new(egui::Id::new("redline-crop-confirm"))
@@ -1366,9 +1366,9 @@ fn draw_marquee(
     let screen = Rect::from_min_max(project(sel.rect.min), project(sel.rect.max));
 
     // Halo (dark stroke under white so it's visible on any background).
-    let halo = Stroke::new(2.5, Color32::from_black_alpha(160));
+    let halo = Stroke::new(2.5_f32, Color32::from_black_alpha(160));
     let white = Color32::WHITE;
-    let dash = Stroke::new(1.5, white);
+    let dash = Stroke::new(1.5_f32, white);
 
     // "Marching" = phase-shift the dashes using wall-clock time.
     let phase = ((time % 1.0) as f32) * 8.0;
@@ -1413,7 +1413,7 @@ fn draw_marquee(
         painter.rect_stroke(
             Rect::from_center_size(corner, Vec2::splat(HANDLE_SIZE)),
             1.0,
-            Stroke::new(1.0, Color32::BLACK),
+            Stroke::new(1.0_f32, Color32::BLACK),
         );
     }
 }
@@ -1495,7 +1495,7 @@ fn draw_dashed_ellipse(
 
 fn draw_grid(painter: &Painter, rect: Rect, cell: f32) {
     let cell = cell.max(4.0);
-    let stroke = Stroke::new(0.5, Color32::from_rgba_unmultiplied(255, 255, 255, 30));
+    let stroke = Stroke::new(0.5_f32, Color32::from_rgba_unmultiplied(255, 255, 255, 30));
 
     // Vertical lines
     let mut x = rect.min.x;
@@ -1565,7 +1565,7 @@ fn draw_empty_state(ui: &mut Ui, canvas_rect: Rect, state: &mut AppState) {
     painter.rect_stroke(
         card,
         egui::Rounding::same(16.0),
-        Stroke::new(1.0, t.divider),
+        Stroke::new(1.0_f32, t.divider),
     );
 
     let mut want_region = false;
@@ -1777,7 +1777,7 @@ fn draw_tool_preview(
     let current_tool = &state.current_tool;
     let arrow_color = settings.stroke_color;
     let stroke = Stroke::new(settings.stroke_width, settings.stroke_color);
-    let amber_stroke = Stroke::new(2.0, state.settings.theme().accent);
+    let amber_stroke = Stroke::new(2.0_f32, state.settings.theme().accent);
 
     match tool_state {
         ToolState::Drawing { start, current } => {
@@ -1899,11 +1899,11 @@ fn draw_tool_preview(
                     painter.rect_stroke(
                         rect,
                         0.0,
-                        Stroke::new(1.0, Color32::from_white_alpha(180)),
+                        Stroke::new(1.0_f32, Color32::from_white_alpha(180)),
                     );
                 }
                 Tool::Crop => {
-                    painter.rect_stroke(rect, 0.0, Stroke::new(2.0, Color32::WHITE));
+                    painter.rect_stroke(rect, 0.0, Stroke::new(2.0_f32, Color32::WHITE));
                 }
                 Tool::Callout => {
                     let c = settings.stroke_color;
@@ -1972,12 +1972,12 @@ fn draw_tool_preview(
         }
         ToolState::PendingCrop { rect } => {
             let pr = Rect::from_min_max(project(rect.min), project(rect.max));
-            painter.rect_stroke(pr, 0.0, Stroke::new(2.0, Color32::WHITE));
+            painter.rect_stroke(pr, 0.0, Stroke::new(2.0_f32, Color32::WHITE));
             painter.rect_filled(pr, 0.0, Color32::from_white_alpha(20));
         }
         ToolState::DrawingLasso { points } => {
             if points.len() >= 2 {
-                let lasso_stroke = Stroke::new(1.5, Color32::WHITE);
+                let lasso_stroke = Stroke::new(1.5_f32, Color32::WHITE);
                 for i in 1..points.len() {
                     painter
                         .line_segment([project(points[i - 1]), project(points[i])], lasso_stroke);
@@ -1986,7 +1986,7 @@ fn draw_tool_preview(
                 if points.len() >= 3 {
                     painter.line_segment(
                         [project(*points.last().unwrap()), project(points[0])],
-                        Stroke::new(1.0, Color32::from_white_alpha(120)),
+                        Stroke::new(1.0_f32, Color32::from_white_alpha(120)),
                     );
                 }
             }
@@ -2044,7 +2044,7 @@ fn draw_stamp_preview(
         );
     }
 
-    let dash_stroke = Stroke::new(1.0, Color32::from_white_alpha(180));
+    let dash_stroke = Stroke::new(1.0_f32, Color32::from_white_alpha(180));
     draw_dashed_rect(painter, rect, dash_stroke, 6.0, 4.0, 0.0);
 }
 

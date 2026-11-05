@@ -103,34 +103,34 @@ impl Theme {
         }
         v.panel_fill = self.panel_bg;
         v.window_fill = self.panel_bg;
-        v.window_stroke = egui::Stroke::new(1.0, self.divider);
+        v.window_stroke = egui::Stroke::new(1.0_f32, self.divider);
         v.extreme_bg_color = self.surface_bg;
         v.faint_bg_color = self.toolbar_bg;
         v.code_bg_color = self.surface_bg;
 
         v.widgets.noninteractive.bg_fill = self.panel_bg;
         v.widgets.noninteractive.weak_bg_fill = self.panel_bg;
-        v.widgets.noninteractive.bg_stroke = egui::Stroke::new(1.0, self.divider);
+        v.widgets.noninteractive.bg_stroke = egui::Stroke::new(1.0_f32, self.divider);
         v.widgets.noninteractive.fg_stroke.color = self.text_muted;
 
         v.widgets.inactive.bg_fill = self.surface_bg;
         v.widgets.inactive.weak_bg_fill = self.surface_bg;
-        v.widgets.inactive.bg_stroke = egui::Stroke::new(1.0, self.border_idle);
+        v.widgets.inactive.bg_stroke = egui::Stroke::new(1.0_f32, self.border_idle);
         v.widgets.inactive.fg_stroke.color = self.text_muted;
 
         v.widgets.hovered.bg_fill = self.hover_bg;
         v.widgets.hovered.weak_bg_fill = self.hover_bg;
-        v.widgets.hovered.bg_stroke = egui::Stroke::new(1.0, self.accent_dim);
+        v.widgets.hovered.bg_stroke = egui::Stroke::new(1.0_f32, self.accent_dim);
         v.widgets.hovered.fg_stroke.color = self.text_heading;
 
         v.widgets.active.bg_fill = self.active_bg;
         v.widgets.active.weak_bg_fill = self.active_bg;
-        v.widgets.active.bg_stroke = egui::Stroke::new(1.0, self.accent);
+        v.widgets.active.bg_stroke = egui::Stroke::new(1.0_f32, self.accent);
         v.widgets.active.fg_stroke.color = self.active_text;
 
         v.widgets.open.bg_fill = self.hover_bg;
         v.widgets.open.weak_bg_fill = self.hover_bg;
-        v.widgets.open.bg_stroke = egui::Stroke::new(1.0, self.border_idle);
+        v.widgets.open.bg_stroke = egui::Stroke::new(1.0_f32, self.border_idle);
         v.widgets.open.fg_stroke.color = self.text_heading;
 
         v.selection.bg_fill = self.selection_fill;

@@ -398,6 +398,7 @@ mod tests {
             author: ParticipantId::new(),
             layer: None,
             layer_name: None,
+            transform: None,
         }
     }
 

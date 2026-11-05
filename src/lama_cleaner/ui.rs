@@ -267,7 +267,7 @@ fn show_tab_bar(ui: &mut egui::Ui, state: &mut LamaCleanerState) {
                 .selected(active)
                 .min_size(Vec2::new(100.0, 22.0))
                 .stroke(if active {
-                    Stroke::new(1.0, BLUE)
+                    Stroke::new(1.0_f32, BLUE)
                 } else {
                     Stroke::NONE
                 }),
@@ -891,7 +891,8 @@ fn status_badge(ui: &mut egui::Ui, status: &InstanceStatus) {
     let (rect, _) = ui.allocate_exact_size(Vec2::new(90.0, 22.0), egui::Sense::hover());
     ui.painter()
         .rect_filled(rect, 4.0, col.linear_multiply(0.25));
-    ui.painter().rect_stroke(rect, 4.0, Stroke::new(1.0, col));
+    ui.painter()
+        .rect_stroke(rect, 4.0, Stroke::new(1.0_f32, col));
     ui.painter().text(
         rect.center(),
         egui::Align2::CENTER_CENTER,

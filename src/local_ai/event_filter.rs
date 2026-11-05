@@ -167,6 +167,7 @@ mod tests {
                 author,
                 layer: None,
                 layer_name: None,
+                transform: None,
             },
         }
     }

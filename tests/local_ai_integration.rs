@@ -2,7 +2,12 @@
 //! Uses wiremock to stand in for Ollama; runs the full
 //! event → filter → decision → dispatch loop in-process.
 
-#![cfg(all(feature = "local-ai", feature = "agent-server"))]
+// The test shares AppState across threads; the optional GTK webview is thread-bound.
+#![cfg(all(
+    feature = "local-ai",
+    feature = "agent-server",
+    not(feature = "lama-webview")
+))]
 
 use redline::agent::{drain_ops, AgentServer};
 use redline::local_ai::agent::{spawn, LocalAiConfig};
