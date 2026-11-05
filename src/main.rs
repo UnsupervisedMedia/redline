@@ -45,6 +45,44 @@ mod local_ai;
 use app::RedLineApp;
 use state::SnapMode;
 
+/// A GUI started from an interactive shell should release the prompt. Re-exec
+/// once in a new session so closing that terminal also leaves the window open.
+#[cfg(unix)]
+fn detach_from_terminal() -> std::io::Result<bool> {
+    use std::io::IsTerminal;
+    use std::os::unix::process::CommandExt;
+    use std::process::{Command, Stdio};
+
+    if std::env::var_os("REDLINE_DETACHED").is_some()
+        || std::env::var_os("REDLINE_FOREGROUND").is_some()
+        || !std::io::stdin().is_terminal()
+        || !std::io::stdout().is_terminal()
+        || !std::io::stderr().is_terminal()
+    {
+        return Ok(false);
+    }
+
+    let mut child = Command::new(std::env::current_exe()?);
+    child
+        .args(std::env::args_os().skip(1))
+        .env("REDLINE_DETACHED", "1")
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
+    // SAFETY: setsid is async-signal-safe and requires no state from the parent.
+    unsafe {
+        child.pre_exec(|| {
+            if libc::setsid() == -1 {
+                Err(std::io::Error::last_os_error())
+            } else {
+                Ok(())
+            }
+        });
+    }
+    child.spawn()?;
+    Ok(true)
+}
+
 fn parse_capture_arg() -> Option<SnapMode> {
     let args: Vec<String> = std::env::args().skip(1).collect();
     let mut i = 0;
@@ -143,6 +181,13 @@ fn main() -> eframe::Result<()> {
             }
             _ => {}
         }
+    }
+
+    #[cfg(unix)]
+    match detach_from_terminal() {
+        Ok(true) => return Ok(()),
+        Ok(false) => {}
+        Err(err) => eprintln!("redline: could not detach from terminal: {err}"),
     }
 
     let startup_capture = parse_capture_arg();

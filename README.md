@@ -32,6 +32,8 @@ cargo build --release
 ```
 `./install.sh` (Linux) builds with the AI features and installs a desktop entry; see [RELEASING.md](RELEASING.md).
 
+On Unix, launching the GUI from an interactive terminal returns the shell prompt while the window stays open. Set `REDLINE_FOREGROUND=1` to keep it attached when debugging. `--help` and `--version` always print in the terminal.
+
 ### Cargo features
 | Feature | Default | What it adds |
 |---|---|---|
