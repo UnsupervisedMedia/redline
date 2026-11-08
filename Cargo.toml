@@ -71,7 +71,7 @@ egui_extras = { version = "0.29", features = ["svg"] }
 base64 = "0.23"
 resvg = "0.43"
 usvg = "0.43"
-tiny-skia = "0.11"
+tiny-skia = "0.12"
 
 [target.'cfg(not(windows))'.dependencies]
 ashpd = { version = "0.13", default-features = false, features = ["async-io", "screenshot"] }
